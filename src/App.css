@@ -1,0 +1,42 @@
+.custom-range {
+  -webkit-appearance: none; 
+  appearance: none;
+  width: 100%;
+  height: 5px; 
+  background: linear-gradient(
+    to right,
+    white var(--progress),
+    grey var(--progress)
+  );
+  border-radius: 4px;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  border:none
+}
+
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+
+.custom-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+
+.custom-range::-ms-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
