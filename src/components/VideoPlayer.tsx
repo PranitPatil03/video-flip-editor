@@ -14,10 +14,9 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { SelectGroup } from "./ui/select";
+import { VideoData } from "../utils/types";
 
 export default function VideoPlayer() {
-  const videoUrl =
-    "https://upcdn.io/FW25c8M/raw/uploads/2024/07/11/4kUzT1YZ9p-Rocket.Chat%20Issue.mp4";
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(0.5);
   const [volumeProgress, setVolumeProgress] = useState(0.5);
@@ -70,12 +69,26 @@ export default function VideoPlayer() {
     return `${hh}:${mm}:${ss}`;
   };
 
+  const VideoFileData = localStorage.getItem("VideoFileData");
+
+  if (!VideoFileData) {
+    return <div>Video File Not Found</div>;
+  }
+
+  const videoData: VideoData = JSON.parse(VideoFileData);
+
+  const videoUrl = videoData.fileUrl;
+
   return (
     <div className="flex gap-5 items-center w-full h-full">
       <div className="overflow-hidden h-full rounded-xl flex flex-col w-full">
         <ReactPlayer
           ref={playerRef}
-          url={videoUrl}
+          url={
+            videoUrl !== null
+              ? videoUrl
+              : "https://upcdn.io/FW25c8M/raw/uploads/2024/07/11/4kUzT1YZ9p-Rocket.Chat%20Issue.mp4your-default-url"
+          }
           width="100%"
           playing={playing}
           volume={volume}

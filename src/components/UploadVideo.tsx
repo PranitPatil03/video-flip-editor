@@ -1,6 +1,7 @@
 import { UploadWidgetResult } from "@bytescale/upload-widget";
 import { UploadDropzone } from "@bytescale/upload-widget-react";
 import { useNavigate } from "react-router-dom";
+import { VideoData } from "../utils/types";
 
 export default function UploadVideo() {
   const navigate = useNavigate();
@@ -13,6 +14,11 @@ export default function UploadVideo() {
 
   const handleVideoFileUpload = (files: UploadWidgetResult[]) => {
     console.log(files);
+    const videoData:VideoData={
+      accountId:files[0].accountId,
+      fileUrl:files[0].fileUrl
+    }
+    localStorage.setItem("VideoFileData", JSON.stringify(videoData));
     navigate("/edit-video");
   };
 
