@@ -13,7 +13,7 @@ export const CropperOverlay: React.FC = () => {
     setCropperDimensions,
   } = useVideo();
 
-  const handleDrag = (e: DraggableEvent, data: DraggableData) => {
+  const handleDrag = (_e: DraggableEvent, data: DraggableData) => {
     setCropperPosition({ x: data.x, y: data.y });
   };
 
