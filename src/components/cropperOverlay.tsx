@@ -1,13 +1,27 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useVideo } from "../context/VideoContext";
-import Draggable from "react-draggable";
+import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 
 export const CropperOverlay: React.FC = () => {
-  const { cropperAspectRatio, playerRef, isCropperActive } = useVideo();
+  const {
+    cropperAspectRatio,
+    playerRef,
+    isCropperActive,
+    setCropperPosition,
+    setCropperDimensions,
+  } = useVideo();
+
+  const handleDrag = (e: DraggableEvent, data: DraggableData) => {
+    setCropperPosition({ x: data.x, y: data.y });
+  };
+
   const [overlayDimensions, setOverlayDimensions] = useState({
     width: 0,
     height: 0,
   });
+
   const [bounds, setBounds] = useState({
     left: 0,
     top: 0,
@@ -52,14 +66,14 @@ export const CropperOverlay: React.FC = () => {
 
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
-
+    setCropperDimensions(overlayDimensions);
     return () => {
       window.removeEventListener("resize", updateDimensions);
     };
   }, [cropperAspectRatio, playerRef, isCropperActive]);
 
   const initialOverlay = isCropperActive ? (
-    <Draggable bounds={bounds}>
+    <Draggable bounds={bounds} onDrag={handleDrag}>
       <div
         className="border-x-2 border-white absolute cursor-move top-0"
         style={{

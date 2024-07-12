@@ -17,12 +17,12 @@ const GeneratePreview = () => {
 
   const handleStartCropper = () => {
     setIsCropperActive(true);
-    setIsStartCropperDisabled(true); // Disable the button after it is clicked
+    setIsStartCropperDisabled(true); 
   };
 
   const handleRemoveCropper = () => {
     setIsCropperActive(false);
-    setIsStartCropperDisabled(false); // Enable the start button
+    setIsStartCropperDisabled(false); 
   };
 
   return (
@@ -40,7 +40,7 @@ const GeneratePreview = () => {
               size="sm"
               className="bg-[#7C36D6] text-white text-sm sm:text-base font-medium rounded-xl w-full sm:w-auto"
               onClick={handleStartCropper}
-              disabled={isStartCropperDisabled} // Disable based on state
+              disabled={isStartCropperDisabled} 
             >
               Start Cropper
             </Button>
@@ -49,7 +49,7 @@ const GeneratePreview = () => {
               size="sm"
               className="bg-[#7C36D6] text-white text-sm sm:text-base font-medium rounded-xl w-full sm:w-auto"
               onClick={handleRemoveCropper}
-              disabled={!isCropperActive} // Disable when cropper is not active
+              disabled={!isCropperActive} 
             >
               Remove Cropper
             </Button>
