@@ -15,6 +15,7 @@ import {
 } from "../components/ui/select";
 import { ScrollArea } from "../components/ui/scroll-area";
 import { useVideo } from "../context/VideoContext";
+import { CropperOverlay } from "./cropperOverlay";
 
 export default function VideoPlayer() {
   const {
@@ -96,8 +97,8 @@ export default function VideoPlayer() {
 
   return (
     <div className="flex gap-5 items-center w-full h-full max-w-4xl mx-auto">
-      <div className="overflow-hidden h-full rounded-xl flex flex-col w-full">
-        <div className="p-3 pl-0 rounded-xl aspect-video">
+      <div className="overflow-hidden h-full flex flex-col w-full">
+        <div className="pl-0 aspect-video relative z-10">
           <ReactPlayer
             ref={playerRef}
             url={
@@ -112,9 +113,10 @@ export default function VideoPlayer() {
             onProgress={handleProgress}
             onDuration={handleDuration}
           />
+          <CropperOverlay></CropperOverlay>
         </div>
 
-        <div className="w-full pr-4">
+        <div className="w-full">
           <div className="flex justify-between items-center w-full">
             <Button
               onClick={handlePlayPause}

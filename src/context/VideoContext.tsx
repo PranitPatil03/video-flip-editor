@@ -25,6 +25,8 @@ interface VideoContextType {
   videoData: VideoData | null;
   setVideoData: (data: VideoData | null) => void;
   playerRef: React.RefObject<ReactPlayer>;
+  isCropperActive:boolean
+  setIsCropperActive: (isCropperActive: boolean) => void;
 }
 
 const VideoContext = createContext<VideoContextType | undefined>(undefined);
@@ -37,7 +39,8 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({
   const [playbackRate, setPlaybackRate] = useState(1);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [cropperAspectRatio, setCropperAspectRatio] = useState("16:9");
+  const [isCropperActive, setIsCropperActive] = useState(false);
+  const [cropperAspectRatio, setCropperAspectRatio] = useState("9:16");
   const [videoData, setVideoData] = useState<VideoData | null>(null);
   const playerRef = useRef<ReactPlayer>(null);
 
@@ -59,6 +62,8 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({
         videoData,
         setVideoData,
         playerRef,
+        isCropperActive,
+        setIsCropperActive
       }}
     >
       {children}
