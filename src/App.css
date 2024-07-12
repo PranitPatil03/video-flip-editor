@@ -40,3 +40,20 @@
   background: #fff;
   cursor: pointer;
 }
+
+/* ::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #2C2D30;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4A4B50;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5A5B60;
+} */

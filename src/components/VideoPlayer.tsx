@@ -15,6 +15,7 @@ import {
 } from "../components/ui/select";
 import { SelectGroup } from "./ui/select";
 import { VideoData } from "../utils/types";
+import { ScrollArea } from "../components/ui/scroll-area";
 
 export default function VideoPlayer() {
   const [playing, setPlaying] = useState(false);
@@ -24,6 +25,7 @@ export default function VideoPlayer() {
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [cropperAspectRatio, setCropperAspectRatio] = useState("16:9");
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const playerRef = useRef<ReactPlayer>(null);
 
   const handlePlayPause = () => {
@@ -80,30 +82,37 @@ export default function VideoPlayer() {
   const videoUrl = videoData.fileUrl;
 
   return (
-    <div className="flex gap-5 items-center w-full h-full">
+    <div className="flex gap-5 items-center w-full h-full max-w-4xl mx-auto">
       <div className="overflow-hidden h-full rounded-xl flex flex-col w-full">
-        <ReactPlayer
-          ref={playerRef}
-          url={
-            videoUrl !== null
-              ? videoUrl
-              : "https://upcdn.io/FW25c8M/raw/uploads/2024/07/11/4kUzT1YZ9p-Rocket.Chat%20Issue.mp4your-default-url"
-          }
-          width="100%"
-          playing={playing}
-          volume={volume}
-          playbackRate={playbackRate}
-          onProgress={handleProgress}
-          onDuration={handleDuration}
-        />
+        <div className="p-3 pl-0 rounded-xl aspect-video">
+          <ReactPlayer
+            ref={playerRef}
+            url={
+              videoUrl !== null
+                ? videoUrl
+                : "https://upcdn.io/FW25c8M/raw/uploads/2024/07/11/4kUzT1YZ9p-Rocket.Chat%20Issue.mp4your-default-url"
+            }
+            width="100%"
+            height="100%"
+            playing={playing}
+            volume={volume}
+            playbackRate={playbackRate}
+            onProgress={handleProgress}
+            onDuration={handleDuration}
+          />
+        </div>
 
-        <div className="w-full px-7">
-          <div className="flex justify-between items-center mt-4 w-full">
+        <div className="w-full pr-4">
+          <div className="flex justify-between items-center w-full">
             <Button
               onClick={handlePlayPause}
-              className="text-white py-1 rounded bg-transparent hover:bg-transparent"
+              className="text-white py-1 rounded bg-transparent hover:bg-transparent pl-0"
             >
-              {playing ? <Pause fill="white" /> : <Play fill="white" />}
+              {playing ? (
+                <Pause fill="white" />
+              ) : (
+                <Play fill="white" className="p-0" />
+              )}
             </Button>
             <Input
               type="range"
@@ -118,8 +127,8 @@ export default function VideoPlayer() {
               }
             />
           </div>
-          <div className="flex flex-row justify-between items-center">
-            <div className="flex justify-start text-white text-sm mb-2 gap-2 p-3">
+          <div className="flex flex-row justify-between items-center gap-5 md:gap-1">
+            <div className="flex justify-start text-white text-sm gap-2 py-3">
               <span className="text-base font-medium">
                 {formatTime(progress * duration)}
               </span>
@@ -128,8 +137,8 @@ export default function VideoPlayer() {
                 {formatTime(duration)}
               </span>
             </div>
-            <div className="flex items-center justify-center">
-              <span className="text-white mr-2">
+            <div className="flex items-center justify-center gap-3">
+              <span className="text-white">
                 <Volume2 fill="white" />
               </span>
               <input
@@ -139,7 +148,7 @@ export default function VideoPlayer() {
                 step="any"
                 value={volumeProgress}
                 onChange={handleVolumeChange}
-                className="custom-range h-1 p-0 w-24"
+                className="custom-range h-1 p-0 w-12 md:w-24"
                 style={
                   {
                     "--progress": `${volumeProgress * 100}%`,
@@ -148,50 +157,63 @@ export default function VideoPlayer() {
               />
             </div>
           </div>
-          <div className="px-3 flex flex-row gap-5 z-10">
-            <Select
-              value={playbackRate.toString()}
-              onValueChange={(value) => handlePlaybackRateChange(value)}
+          <div className="py-3 flex flex-col md:flex-row gap-5 z-10 ">
+            <div>
+              <Select
+                value={playbackRate.toString()}
+                onValueChange={(value) => handlePlaybackRateChange(value)}
+              >
+                <SelectTrigger className="w-[170px] bg-inherit border-[#45474E]">
+                  <SelectValue>
+                    Playback speed{" "}
+                    <span className="text-sm font-medium text-gray-400">
+                      {`${playbackRate}x`}{" "}
+                    </span>
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent className="bg-inherit shadow-md text-white border-[#9BA6AB] z-10">
+                  <SelectGroup className="w-full">
+                    <ScrollArea className="h-[60px] md:h-[80px] w-full">
+                      <SelectItem value="0.5">0.5x</SelectItem>
+                      <SelectItem value="1">1x</SelectItem>
+                      <SelectItem value="1.5">1.5x</SelectItem>
+                      <SelectItem value="2">2x</SelectItem>
+                    </ScrollArea>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div
+              className={`relative ${
+                openDropdown === "playback" ? "mt-20 md:mt-0" : ""
+              }`}
             >
-              <SelectTrigger className="w-[170px] bg-inherit border-[#45474E]">
-                <SelectValue>
-                  Playback speed{" "}
-                  <span className="text-sm font-medium text-gray-400">
-                    {`${playbackRate}x`}{" "}
-                  </span>
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent className="bg-inherit shadow-md text-white border-[#9BA6AB] z-10">
-                <SelectGroup>
-                  <SelectItem value="0.5">0.5x</SelectItem>
-                  <SelectItem value="1">1x</SelectItem>
-                  <SelectItem value="1.5">1.5x</SelectItem>
-                  <SelectItem value="2">2x</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select
-              value={cropperAspectRatio}
-              onValueChange={(value) => handleCropperAspectRatioChange(value)}
-            >
-              <SelectTrigger className="w-[210px] bg-inherit border-[#45474E]">
-                <SelectValue>
-                  Cropper Aspect Ratio{" "}
-                  <span className="text-sm font-medium text-gray-400">
-                    {cropperAspectRatio}
-                  </span>
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent className="bg-inherit shadow-md text-white border-[#9BA6AB]">
-                <SelectGroup>
-                  <SelectItem value="9:18">9:18</SelectItem>
-                  <SelectItem value="9:16">9:16</SelectItem>
-                  <SelectItem value="4:3">4:3</SelectItem>
-                  <SelectItem value="3:4">3:4</SelectItem>
-                  <SelectItem value="1:1">1:1</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+              <Select
+                value={cropperAspectRatio}
+                onValueChange={(value) => handleCropperAspectRatioChange(value)}
+                onOpenChange={(open) => setOpenDropdown(open ? "aspect" : null)}
+              >
+                <SelectTrigger className="w-[210px] bg-inherit border-[#45474E]">
+                  <SelectValue>
+                    Cropper Aspect Ratio{" "}
+                    <span className="text-sm font-medium text-gray-400">
+                      {cropperAspectRatio}
+                    </span>
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent className="bg-inherit shadow-md text-white border-[#9BA6AB]">
+                  <SelectGroup>
+                    <ScrollArea className="h-[60px] md:h-[80px] w-full">
+                      <SelectItem value="9:18">9:18</SelectItem>
+                      <SelectItem value="9:16">9:16</SelectItem>
+                      <SelectItem value="4:3">4:3</SelectItem>
+                      <SelectItem value="3:4">3:4</SelectItem>
+                      <SelectItem value="1:1">1:1</SelectItem>
+                    </ScrollArea>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       </div>
