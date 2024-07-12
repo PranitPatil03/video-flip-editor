@@ -157,13 +157,20 @@ export default function VideoPlayer() {
               />
             </div>
           </div>
-          <div className="py-3 flex flex-col md:flex-row gap-5 z-10 ">
-            <div>
+          <div className="py-3 flex flex-col md:flex-row gap-5 z-10">
+            <div
+              className={`relative ${
+                openDropdown === "playback" ? "z-20" : "z-10"
+              }`}
+            > 
               <Select
                 value={playbackRate.toString()}
                 onValueChange={(value) => handlePlaybackRateChange(value)}
+                onOpenChange={(open) =>
+                  setOpenDropdown(open ? "playback" : null)
+                }
               >
-                <SelectTrigger className="w-[170px] bg-inherit border-[#45474E]">
+                <SelectTrigger className="w-full md:w-[170px] bg-inherit border-[#45474E]">
                   <SelectValue>
                     Playback speed{" "}
                     <span className="text-sm font-medium text-gray-400">
@@ -171,7 +178,7 @@ export default function VideoPlayer() {
                     </span>
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="bg-inherit shadow-md text-white border-[#9BA6AB] z-10">
+                <SelectContent className="bg-inherit shadow-md text-white border-[#9BA6AB] z-30">
                   <SelectGroup className="w-full">
                     <ScrollArea className="h-[60px] md:h-[80px] w-full">
                       <SelectItem value="0.5">0.5x</SelectItem>
@@ -183,17 +190,18 @@ export default function VideoPlayer() {
                 </SelectContent>
               </Select>
             </div>
+
             <div
               className={`relative ${
-                openDropdown === "playback" ? "mt-20 md:mt-0" : ""
-              }`}
+                openDropdown === "aspect" ? "z-20" : "z-10"
+              } ${openDropdown === "playback" ? "mt-20 md:mt-0" : ""}`}
             >
               <Select
                 value={cropperAspectRatio}
                 onValueChange={(value) => handleCropperAspectRatioChange(value)}
                 onOpenChange={(open) => setOpenDropdown(open ? "aspect" : null)}
               >
-                <SelectTrigger className="w-[210px] bg-inherit border-[#45474E]">
+                <SelectTrigger className="w-full md:w-[210px] bg-inherit border-[#45474E]">
                   <SelectValue>
                     Cropper Aspect Ratio{" "}
                     <span className="text-sm font-medium text-gray-400">
@@ -201,7 +209,7 @@ export default function VideoPlayer() {
                     </span>
                   </SelectValue>
                 </SelectTrigger>
-                <SelectContent className="bg-inherit shadow-md text-white border-[#9BA6AB]">
+                <SelectContent className="bg-inherit shadow-md text-white border-[#9BA6AB] z-30">
                   <SelectGroup>
                     <ScrollArea className="h-[60px] md:h-[80px] w-full">
                       <SelectItem value="9:18">9:18</SelectItem>
