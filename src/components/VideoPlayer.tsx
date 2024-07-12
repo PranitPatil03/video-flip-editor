@@ -1,8 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect } from "react";
 import ReactPlayer from "react-player";
 import { Input } from "./ui/input";
-import { Play, Volume2 } from "lucide-react";
-import { Pause } from "lucide-react";
+import { Play, Volume2, Pause } from "lucide-react";
 import { Button } from "./ui/button";
 import "../App.css";
 
@@ -12,21 +11,39 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectGroup,
 } from "../components/ui/select";
-import { SelectGroup } from "./ui/select";
-import { VideoData } from "../utils/types";
 import { ScrollArea } from "../components/ui/scroll-area";
+import { useVideo } from "../context/VideoContext";
 
 export default function VideoPlayer() {
-  const [playing, setPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.5);
-  const [volumeProgress, setVolumeProgress] = useState(0.5);
-  const [playbackRate, setPlaybackRate] = useState(1);
-  const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [cropperAspectRatio, setCropperAspectRatio] = useState("16:9");
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const playerRef = useRef<ReactPlayer>(null);
+  const {
+    playing,
+    setPlaying,
+    volume,
+    setVolume,
+    playbackRate,
+    setPlaybackRate,
+    progress,
+    setProgress,
+    duration,
+    setDuration,
+    cropperAspectRatio,
+    setCropperAspectRatio,
+    videoData,
+    setVideoData,
+    playerRef,
+  } = useVideo();
+
+  const [volumeProgress, setVolumeProgress] = React.useState(volume);
+  const [openDropdown, setOpenDropdown] = React.useState<string | null>(null);
+
+  useEffect(() => {
+    const storedVideoData = localStorage.getItem("VideoFileData");
+    if (storedVideoData) {
+      setVideoData(JSON.parse(storedVideoData));
+    }
+  }, [setVideoData]);
 
   const handlePlayPause = () => {
     setPlaying(!playing);
@@ -71,13 +88,9 @@ export default function VideoPlayer() {
     return `${hh}:${mm}:${ss}`;
   };
 
-  const VideoFileData = localStorage.getItem("VideoFileData");
-
-  if (!VideoFileData) {
+  if (!videoData) {
     return <div>Video File Not Found</div>;
   }
-
-  const videoData: VideoData = JSON.parse(VideoFileData);
 
   const videoUrl = videoData.fileUrl;
 
@@ -88,9 +101,8 @@ export default function VideoPlayer() {
           <ReactPlayer
             ref={playerRef}
             url={
-              videoUrl !== null
-                ? videoUrl
-                : "https://upcdn.io/FW25c8M/raw/uploads/2024/07/11/4kUzT1YZ9p-Rocket.Chat%20Issue.mp4your-default-url"
+              videoUrl ||
+              "https://upcdn.io/FW25c8M/raw/uploads/2024/07/11/4kUzT1YZ9p-Rocket.Chat%20Issue.mp4"
             }
             width="100%"
             height="100%"

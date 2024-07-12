@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import VideoPlayer from "./VideoPlayer";
 import VideoPreview from "./VideoPreview";
 import { Button } from "./ui/button";
+import { VideoProvider } from "../context/VideoContext";
 
 const GeneratePreview = () => {
   const navigate = useNavigate();
@@ -14,7 +15,9 @@ const GeneratePreview = () => {
   return (
     <div className="flex flex-col w-full h-full max-w-7xl mx-auto p-4 gap-20">
       <div className="flex flex-col lg:flex-row w-full gap-20 md:gap-4 mb-4">
-        <VideoPlayer />
+        <VideoProvider>
+          <VideoPlayer />
+        </VideoProvider>
         <VideoPreview />
       </div>
       <div className="flex flex-col gap-5 w-full mt-auto">
