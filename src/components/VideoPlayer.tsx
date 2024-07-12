@@ -162,7 +162,7 @@ export default function VideoPlayer() {
               className={`relative ${
                 openDropdown === "playback" ? "z-20" : "z-10"
               }`}
-            > 
+            >
               <Select
                 value={playbackRate.toString()}
                 onValueChange={(value) => handlePlaybackRateChange(value)}
@@ -180,7 +180,7 @@ export default function VideoPlayer() {
                 </SelectTrigger>
                 <SelectContent className="bg-inherit shadow-md text-white border-[#9BA6AB] z-30">
                   <SelectGroup className="w-full">
-                    <ScrollArea className="h-[60px] md:h-[80px] w-full">
+                    <ScrollArea className="h-[100px] md:h-[80px] w-full">
                       <SelectItem value="0.5">0.5x</SelectItem>
                       <SelectItem value="1">1x</SelectItem>
                       <SelectItem value="1.5">1.5x</SelectItem>
@@ -194,7 +194,7 @@ export default function VideoPlayer() {
             <div
               className={`relative ${
                 openDropdown === "aspect" ? "z-20" : "z-10"
-              } ${openDropdown === "playback" ? "mt-20 md:mt-0" : ""}`}
+              } ${openDropdown === "playback" ? "mt-28 md:mt-0" : ""}`}
             >
               <Select
                 value={cropperAspectRatio}
@@ -217,6 +217,7 @@ export default function VideoPlayer() {
                       <SelectItem value="4:3">4:3</SelectItem>
                       <SelectItem value="3:4">3:4</SelectItem>
                       <SelectItem value="1:1">1:1</SelectItem>
+                      <SelectItem value="4:5">4:5</SelectItem>
                     </ScrollArea>
                   </SelectGroup>
                 </SelectContent>

@@ -7,6 +7,7 @@ const GeneratePreview = () => {
   const navigate = useNavigate();
 
   const handleCancel = () => {
+    localStorage.removeItem("VideoFileData");
     navigate("/");
   };
 
@@ -16,7 +17,7 @@ const GeneratePreview = () => {
         <VideoPlayer />
         <VideoPreview />
       </div>
-      <div className="flex flex-col gap-4 w-full mt-auto">
+      <div className="flex flex-col gap-5 w-full mt-auto">
         <hr className="border-[#494C55] w-full" />
         <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full sm:w-auto">

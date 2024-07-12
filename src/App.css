@@ -41,7 +41,7 @@
   cursor: pointer;
 }
 
-/* ::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 5px;
 }
 
@@ -56,4 +56,4 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #5A5B60;
-} */
+}
