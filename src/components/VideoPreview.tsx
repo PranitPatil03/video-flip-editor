@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect} from "react";
 import { FaYoutube } from "react-icons/fa";
 import { useVideo } from "../context/VideoContext";
 
@@ -10,8 +10,8 @@ const VideoPreview = () => {
     cropperAspectRatio,
     isCropperActive,
     playing,
+    previewCanvasRef,
   } = useVideo();
-  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     let animationFrameId: number;
@@ -84,6 +84,7 @@ const VideoPreview = () => {
     cropperAspectRatio,
     isCropperActive,
     playing,
+    previewCanvasRef,
   ]);
 
   return (

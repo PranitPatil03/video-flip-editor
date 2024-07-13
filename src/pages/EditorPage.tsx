@@ -1,3 +1,4 @@
+// In EditorPage.tsx
 import { useState } from "react";
 import GeneratePreview from "../components/GeneratePreview";
 import Preview from "../components/Preview";

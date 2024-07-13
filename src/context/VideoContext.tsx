@@ -5,33 +5,10 @@ import React, {
   useContext,
   ReactNode,
   useRef,
+  useCallback,
 } from "react";
 import ReactPlayer from "react-player";
-import { VideoData } from "../utils/types";
-
-interface VideoContextType {
-  playing: boolean;
-  setPlaying: (playing: boolean) => void;
-  volume: number;
-  setVolume: (volume: number) => void;
-  playbackRate: number;
-  setPlaybackRate: (rate: number) => void;
-  progress: number;
-  setProgress: (progress: number) => void;
-  duration: number;
-  setDuration: (duration: number) => void;
-  cropperAspectRatio: string;
-  setCropperAspectRatio: (ratio: string) => void;
-  videoData: VideoData | null;
-  setVideoData: (data: VideoData | null) => void;
-  playerRef: React.RefObject<ReactPlayer>;
-  isCropperActive:boolean
-  setIsCropperActive: (isCropperActive: boolean) => void;
-  cropperPosition: { x: number; y: number };
-  setCropperPosition: (position: { x: number; y: number }) => void;
-  cropperDimensions: { width: number; height: number };
-  setCropperDimensions: (dimensions: { width: number; height: number }) => void;
-}
+import { PreviewData, VideoContextType, VideoData } from "../utils/types";
 
 const VideoContext = createContext<VideoContextType | undefined>(undefined);
 
@@ -48,7 +25,31 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({
   const [videoData, setVideoData] = useState<VideoData | null>(null);
   const playerRef = useRef<ReactPlayer>(null);
   const [cropperPosition, setCropperPosition] = useState({ x: 0, y: 0 });
-  const [cropperDimensions, setCropperDimensions] = useState({ width: 0, height: 0 });
+  const [cropperDimensions, setCropperDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
+  const [previewData, setPreviewData] = useState<PreviewData[]>([]);
+  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  // const addPreviewDataPoint = useCallback(() => {
+  //   const newDataPoint: PreviewData = {
+  //     timeStamp: progress,
+  //     coordinates: [
+  //       cropperPosition.x,
+  //       cropperPosition.y,
+  //       cropperPosition.x + cropperDimensions.width,
+  //       cropperPosition.y + cropperDimensions.height,
+  //     ],
+  //     volume,
+  //     playbackRate,
+  //   };
+  //   setPreviewData((prevData) => [...prevData, newDataPoint]);
+  // }, [progress, cropperPosition, cropperDimensions, volume, playbackRate]);
+
+  const addPreviewDataPoint = useCallback((dataPoint: PreviewData) => {
+    setPreviewData((prevData) => [...prevData, dataPoint]);
+  }, []);
 
   return (
     <VideoContext.Provider
@@ -73,7 +74,11 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({
         cropperPosition,
         setCropperPosition,
         cropperDimensions,
-        setCropperDimensions
+        setCropperDimensions,
+        previewData,
+        setPreviewData,
+        addPreviewDataPoint,
+        previewCanvasRef,
       }}
     >
       {children}

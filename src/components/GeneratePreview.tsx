@@ -1,14 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import VideoPlayer from "./VideoPlayer";
 import VideoPreview from "./VideoPreview";
 import { Button } from "./ui/button";
 import { useVideo } from "../context/VideoContext";
+import { PreviewData } from "../utils/types";
+import { addPreviewDataPoint, getPreviewData } from "../utils/preview";
 
 const GeneratePreview = () => {
-  const { setIsCropperActive, isCropperActive } = useVideo();
+  const {
+    setIsCropperActive,
+    isCropperActive,
+    addPreviewDataPoint: addContextPreviewDataPoint,
+    progress,
+    cropperPosition,
+    cropperDimensions,
+    volume,
+    playbackRate,
+    previewData,
+  } = useVideo();
+
   const [isStartCropperDisabled, setIsStartCropperDisabled] = useState(false);
+  const [isGeneratePreviewDisabled, setIsGeneratePreviewDisabled] =
+    useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setIsGeneratePreviewDisabled(!isCropperActive);
+  }, [isCropperActive]);
 
   const handleCancel = () => {
     localStorage.removeItem("VideoFileData");
@@ -17,13 +36,75 @@ const GeneratePreview = () => {
 
   const handleStartCropper = () => {
     setIsCropperActive(true);
-    setIsStartCropperDisabled(true); 
+    setIsStartCropperDisabled(true);
   };
 
   const handleRemoveCropper = () => {
     setIsCropperActive(false);
-    setIsStartCropperDisabled(false); 
+    setIsStartCropperDisabled(false);
   };
+
+  const handleGeneratePreview = () => {
+    const newDataPoint: PreviewData = {
+      timeStamp: progress,
+      coordinates: [
+        cropperPosition.x,
+        cropperPosition.y,
+        cropperPosition.x + cropperDimensions.width,
+        cropperPosition.y + cropperDimensions.height,
+      ],
+      volume,
+      playbackRate,
+    };
+    addContextPreviewDataPoint(newDataPoint);
+    addPreviewDataPoint(newDataPoint);
+    handleDownloadJSON();
+  };
+
+  const handleDownloadJSON = () => {
+    const combinedData = [...previewData, ...getPreviewData()];
+  
+    const dataStr = JSON.stringify(combinedData, null, 2);
+    const dataUri =
+      "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+    const exportFileDefaultName = "preview_data.json";
+  
+    const linkElement = document.createElement("a");
+    linkElement.setAttribute("href", dataUri);
+    linkElement.setAttribute("download", exportFileDefaultName);
+    linkElement.click();
+  };
+
+  // const handleGeneratePreview = () => {
+  //   const newDataPoint: PreviewData = {
+  //     timeStamp: progress,
+  //     coordinates: [
+  //       cropperPosition.x,
+  //       cropperPosition.y,
+  //       cropperPosition.x + cropperDimensions.width,
+  //       cropperPosition.y + cropperDimensions.height,
+  //     ],
+  //     volume,
+  //     playbackRate,
+  //   };
+  //   addContextPreviewDataPoint(newDataPoint);
+  //   addPreviewDataPoint(newDataPoint);
+  //   handleDownloadJSON()
+  // };
+
+  // const handleDownloadJSON = () => {
+  //   const combinedData = [...previewData, ...getPreviewData()];
+  
+  //   const dataStr = JSON.stringify(combinedData, null, 2);
+  //   const dataUri =
+  //     "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+  //   const exportFileDefaultName = "preview_data.json";
+  
+  //   const linkElement = document.createElement("a");
+  //   linkElement.setAttribute("href", dataUri);
+  //   linkElement.setAttribute("download", exportFileDefaultName);
+  //   linkElement.click();
+  // };
 
   return (
     <div className="flex flex-col w-full h-full max-w-7xl mx-auto p-4 gap-20">
@@ -40,7 +121,7 @@ const GeneratePreview = () => {
               size="sm"
               className="bg-[#7C36D6] text-white text-sm sm:text-base font-medium rounded-xl w-full sm:w-auto"
               onClick={handleStartCropper}
-              disabled={isStartCropperDisabled} 
+              disabled={isStartCropperDisabled}
             >
               Start Cropper
             </Button>
@@ -49,7 +130,7 @@ const GeneratePreview = () => {
               size="sm"
               className="bg-[#7C36D6] text-white text-sm sm:text-base font-medium rounded-xl w-full sm:w-auto"
               onClick={handleRemoveCropper}
-              disabled={!isCropperActive} 
+              disabled={!isCropperActive}
             >
               Remove Cropper
             </Button>
@@ -57,6 +138,8 @@ const GeneratePreview = () => {
               variant="ghost"
               size="sm"
               className="bg-[#7C36D6] text-white text-sm sm:text-base font-medium rounded-xl w-full sm:w-auto"
+              onClick={handleGeneratePreview}
+              disabled={isGeneratePreviewDisabled}
             >
               Generate Preview
             </Button>
