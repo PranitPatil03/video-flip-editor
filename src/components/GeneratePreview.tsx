@@ -58,53 +58,28 @@ const GeneratePreview = () => {
     };
     addContextPreviewDataPoint(newDataPoint);
     addPreviewDataPoint(newDataPoint);
+    storePreviewDataInLocalStorage();
     handleDownloadJSON();
+  };
+
+  const storePreviewDataInLocalStorage = () => {
+    const combinedData = [...previewData, ...getPreviewData()];
+    localStorage.setItem("previewData", JSON.stringify(combinedData));
   };
 
   const handleDownloadJSON = () => {
     const combinedData = [...previewData, ...getPreviewData()];
-  
+
     const dataStr = JSON.stringify(combinedData, null, 2);
     const dataUri =
       "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
     const exportFileDefaultName = "preview_data.json";
-  
+
     const linkElement = document.createElement("a");
     linkElement.setAttribute("href", dataUri);
     linkElement.setAttribute("download", exportFileDefaultName);
     linkElement.click();
   };
-
-  // const handleGeneratePreview = () => {
-  //   const newDataPoint: PreviewData = {
-  //     timeStamp: progress,
-  //     coordinates: [
-  //       cropperPosition.x,
-  //       cropperPosition.y,
-  //       cropperPosition.x + cropperDimensions.width,
-  //       cropperPosition.y + cropperDimensions.height,
-  //     ],
-  //     volume,
-  //     playbackRate,
-  //   };
-  //   addContextPreviewDataPoint(newDataPoint);
-  //   addPreviewDataPoint(newDataPoint);
-  //   handleDownloadJSON()
-  // };
-
-  // const handleDownloadJSON = () => {
-  //   const combinedData = [...previewData, ...getPreviewData()];
-  
-  //   const dataStr = JSON.stringify(combinedData, null, 2);
-  //   const dataUri =
-  //     "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
-  //   const exportFileDefaultName = "preview_data.json";
-  
-  //   const linkElement = document.createElement("a");
-  //   linkElement.setAttribute("href", dataUri);
-  //   linkElement.setAttribute("download", exportFileDefaultName);
-  //   linkElement.click();
-  // };
 
   return (
     <div className="flex flex-col w-full h-full max-w-7xl mx-auto p-4 gap-20">

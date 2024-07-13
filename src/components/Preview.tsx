@@ -1,14 +1,21 @@
 import { useRef, useEffect, useState } from "react";
 import { useVideo } from "../context/VideoContext";
-import { getPreviewData } from "../utils/preview";
 import ReactPlayer from "react-player";
+import { PreviewData } from "../utils/types";
 
 const Preview = () => {
   const { videoData } = useVideo();
-  const [currentPreviewIndex, setCurrentPreviewIndex] = useState(0);
-  const previewData = getPreviewData();
+  const [currentPreviewIndex, setCurrentPreviewIndex] = useState<number>(0);
   const playerRef = useRef<ReactPlayer>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [previewData, setPreviewData] = useState<PreviewData[]>([]);
+
+  useEffect(() => {
+    const storedPreviewData = localStorage.getItem("previewData");
+    if (storedPreviewData) {
+      setPreviewData(JSON.parse(storedPreviewData));
+    }
+  }, []);
 
   useEffect(() => {
     if (!videoData || previewData.length === 0) return;

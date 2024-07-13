@@ -32,21 +32,6 @@ export const VideoProvider: React.FC<{ children: ReactNode }> = ({
   const [previewData, setPreviewData] = useState<PreviewData[]>([]);
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  // const addPreviewDataPoint = useCallback(() => {
-  //   const newDataPoint: PreviewData = {
-  //     timeStamp: progress,
-  //     coordinates: [
-  //       cropperPosition.x,
-  //       cropperPosition.y,
-  //       cropperPosition.x + cropperDimensions.width,
-  //       cropperPosition.y + cropperDimensions.height,
-  //     ],
-  //     volume,
-  //     playbackRate,
-  //   };
-  //   setPreviewData((prevData) => [...prevData, newDataPoint]);
-  // }, [progress, cropperPosition, cropperDimensions, volume, playbackRate]);
-
   const addPreviewDataPoint = useCallback((dataPoint: PreviewData) => {
     setPreviewData((prevData) => [...prevData, dataPoint]);
   }, []);
