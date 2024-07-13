@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { UploadWidgetResult } from "@bytescale/upload-widget";
 import { UploadDropzone } from "@bytescale/upload-widget-react";
 import { useNavigate } from "react-router-dom";
@@ -5,6 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 export default function UploadVideo() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const VITE_API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -26,6 +28,8 @@ export default function UploadVideo() {
       return;
     }
 
+    setIsLoading(true);
+
     const video = document.createElement("video");
     video.src = fileUrl;
 
@@ -33,6 +37,8 @@ export default function UploadVideo() {
       const { videoWidth, videoHeight } = video;
       const aspectRatio = videoWidth / videoHeight;
       const isAspectRatioValid = Math.abs(aspectRatio - 16 / 9) < 0.01;
+
+      setIsLoading(false);
 
       if (isAspectRatioValid) {
         const videoData = {
@@ -50,6 +56,7 @@ export default function UploadVideo() {
     };
 
     video.onerror = () => {
+      setIsLoading(false);
       toast.error("Failed to load video. Please try again.");
       setTimeout(() => {
         window.location.reload();
@@ -65,14 +72,21 @@ export default function UploadVideo() {
 
   return (
     <div className="flex items-center justify-center h-screen w-full bg-[#2C2D30]">
-      <Toaster></Toaster>
-      <UploadDropzone
-        options={options}
-        onComplete={(files) => handleVideoFileUpload(files)}
-        width="600px"
-        height="375px"
-        className="bg-[#37393F] rounded-2xl"
-      />
+      <Toaster />
+      {isLoading ? (
+        <div className="flex flex-col items-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+          <p className="mt-4 text-white">Checking video aspect ratio...</p>
+        </div>
+      ) : (
+        <UploadDropzone
+          options={options}
+          onComplete={(files) => handleVideoFileUpload(files)}
+          width="600px"
+          height="375px"
+          className="bg-[#37393F] rounded-2xl"
+        />
+      )}
     </div>
   );
 }
