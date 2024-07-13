@@ -2,7 +2,6 @@ import { useRef, useEffect, useState } from "react";
 import { useVideo } from "../context/VideoContext";
 import { getPreviewData } from "../utils/preview";
 import ReactPlayer from "react-player";
-import { PreviewData } from "../utils/types";
 
 const Preview = () => {
   const { videoData } = useVideo();
@@ -14,7 +13,10 @@ const Preview = () => {
   useEffect(() => {
     if (!videoData || previewData.length === 0) return;
 
-    const updatePreview = (previewPoint: PreviewData) => {
+    let animationFrameId: number;
+    let lastUpdateTime = 0;
+
+    const updatePreview = (currentTime: number) => {
       const player = playerRef.current?.getInternalPlayer() as HTMLVideoElement;
       const canvas = canvasRef.current;
       if (!player || !canvas) return;
@@ -22,24 +24,16 @@ const Preview = () => {
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      player.currentTime = previewPoint.timeStamp;
-      player.volume = previewPoint.volume;
-      player.playbackRate = previewPoint.playbackRate;
+      const currentPreviewPoint = previewData[currentPreviewIndex];
 
-      const [x, y, width, height] = previewPoint.coordinates;
+      player.currentTime = currentPreviewPoint.timeStamp;
+      player.volume = currentPreviewPoint.volume;
+      player.playbackRate = currentPreviewPoint.playbackRate;
 
-      // Set canvas size to match the cropped area's aspect ratio
-      const aspectRatio = (width - x) / (height - y);
-      const maxWidth = 300; // You can adjust this value
-      const maxHeight = 300; // You can adjust this value
+      const [x, y, width, height] = currentPreviewPoint.coordinates;
 
-      if (aspectRatio > 1) {
-        canvas.width = maxWidth;
-        canvas.height = maxWidth / aspectRatio;
-      } else {
-        canvas.height = maxHeight;
-        canvas.width = maxHeight * aspectRatio;
-      }
+      canvas.width = width - x;
+      canvas.height = height - y;
 
       ctx.drawImage(
         player,
@@ -52,16 +46,22 @@ const Preview = () => {
         canvas.width,
         canvas.height
       );
+
+      if (currentTime - lastUpdateTime >= 1000) {
+        setCurrentPreviewIndex(
+          (prevIndex) => (prevIndex + 1) % previewData.length
+        );
+        lastUpdateTime = currentTime;
+      }
+
+      animationFrameId = requestAnimationFrame(updatePreview);
     };
 
-    const interval = setInterval(() => {
-      updatePreview(previewData[currentPreviewIndex]);
-      setCurrentPreviewIndex(
-        (prevIndex) => (prevIndex + 1) % previewData.length
-      );
-    }, 1000);
+    animationFrameId = requestAnimationFrame(updatePreview);
 
-    return () => clearInterval(interval);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
   }, [videoData, previewData, currentPreviewIndex]);
 
   if (!videoData || previewData.length === 0) {
@@ -80,19 +80,6 @@ const Preview = () => {
           style={{ display: "none" }}
         />
         <canvas ref={canvasRef} className="mx-auto" />
-      </div>
-      <div>
-        <p>
-          Preview Point: {currentPreviewIndex + 1} / {previewData.length}
-        </p>
-        <p>
-          Timestamp: {previewData[currentPreviewIndex].timeStamp.toFixed(2)}s
-        </p>
-        <p>Volume: {previewData[currentPreviewIndex].volume.toFixed(2)}</p>
-        <p>
-          Playback Rate:{" "}
-          {previewData[currentPreviewIndex].playbackRate.toFixed(2)}x
-        </p>
       </div>
     </div>
   );
