@@ -52,9 +52,9 @@ Video Flip Editor is a user-friendly tool designed to simplify video cropping. I
    ```
    The frontend will be available at `http://localhost:5173`.
 
-## Detailed Implementation
+## Detailed Implementation Demo Video
 
-For a detailed explanation of the implementation, please refer to the [implementation details](https://puzzled-cornucopia-fd6.notion.site/VideoVerse-902f7f55fc3d4d509b42562683ebcfa7).
+For a detailed demo of the implementation, please refer to the [Demo Video](https://www.youtube.com/watch?v=UUyQ9mqTEuc).
 
 ## Contact
 
