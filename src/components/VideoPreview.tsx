@@ -47,6 +47,9 @@ const VideoPreview = () => {
       const videoWidth = video.videoWidth;
       const videoHeight = video.videoHeight;
 
+      console.log("Line 50",videoWidth)
+      console.log("Line 51",videoHeight)
+
       const scaleX = videoWidth / video.clientWidth;
       const scaleY = videoHeight / video.clientHeight;
 

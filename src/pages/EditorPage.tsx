@@ -1,8 +1,7 @@
-// In EditorPage.tsx
 import { useState } from "react";
-import GeneratePreview from "../components/GeneratePreview";
 import Preview from "../components/Preview";
 import { VideoProvider } from "../context/VideoContext";
+import GeneratePreview from "../components/GenerateSession";
 
 export default function EditorPage() {
   const [activeTab, setActiveTab] = useState("generate");

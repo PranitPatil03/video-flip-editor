@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
 import VideoPlayer from "./VideoPlayer";
 import VideoPreview from "./VideoPreview";
-import { Button } from "./ui/button";
-import { useVideo } from "../context/VideoContext";
+import { useState, useEffect } from "react";
 import { PreviewData } from "../utils/types";
+import { useNavigate } from "react-router-dom";
+import { useVideo } from "../context/VideoContext";
 import { addPreviewDataPoint, getPreviewData } from "../utils/preview";
 
-const GeneratePreview = () => {
+const GenerateSession = () => {
   const {
     setIsCropperActive,
     isCropperActive,
@@ -133,4 +133,4 @@ const GeneratePreview = () => {
   );
 };
 
-export default GeneratePreview;
+export default GenerateSession;

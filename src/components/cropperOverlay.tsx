@@ -73,7 +73,7 @@ export const CropperOverlay: React.FC = () => {
   }, [cropperAspectRatio, playerRef, isCropperActive]);
 
   const initialOverlay = isCropperActive ? (
-    <Draggable bounds={bounds} onDrag={handleDrag}>
+    <Draggable bounds={bounds} onDrag={handleDrag} >
       <div
         className="border-x-2 border-white absolute cursor-move top-0"
         style={{
